@@ -2,6 +2,7 @@ import fastify from 'fastify'
 import { register } from './http/controllers/register'
 import { ZodError } from 'zod'
 import { env } from './env'
+import { authenticate } from './http/controllers/authenticate'
 
 export const app = fastify()
 
@@ -22,3 +23,4 @@ app.setErrorHandler((error, _, reply) => {
 })
 
 app.register(register)
+app.register(authenticate)
