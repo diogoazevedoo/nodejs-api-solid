@@ -1,22 +1,55 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { InMemoryCheckInsRepository } from '@/repositories/in-memory/in-memory-check-ins-repository'
-import { CheckInService } from './check-in'
+import { RegisterService } from './register'
+import { compare } from 'bcryptjs'
+import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
+import { UserAlreadyExistsError } from './errors/user-already-exists-error'
 
-let checkInsRepository: InMemoryCheckInsRepository
-let sut: CheckInService
+let usersRepository: InMemoryUsersRepository
+let sut: RegisterService
 
-describe('Check In Service', () => {
+describe('Register Service', () => {
   beforeEach(() => {
-    checkInsRepository = new InMemoryCheckInsRepository()
-    sut = new CheckInService(checkInsRepository)
+    usersRepository = new InMemoryUsersRepository()
+    sut = new RegisterService(usersRepository)
   })
 
-  it('should be able to check in', async () => {
-    const { checkIn } = await sut.execute({
-      gymId: 'gym-01',
-      userId: 'user-01',
+  it('should hash user password upon registration', async () => {
+    const { user } = await sut.execute({
+      name: 'John Doe',
+      email: 'johndoe@example.com',
+      password: '123456',
     })
 
-    expect(checkIn.id).toEqual(expect.any(String))
+    const isPasswordCorrectlyHashed = await compare('123456', user.passwordHash)
+
+    expect(isPasswordCorrectlyHashed).toBe(true)
+  })
+
+  it('should not be able to register with same email twice', async () => {
+    const email = 'johndoe@example.com'
+
+    await sut.execute({
+      name: 'John Doe',
+      email,
+      password: '123456',
+    })
+
+    await expect(() =>
+      sut.execute({
+        name: 'John Doe',
+        email,
+        password: '123456',
+      }),
+    ).rejects.toBeInstanceOf(UserAlreadyExistsError)
+  })
+
+  it('should be able to register', async () => {
+    const { user } = await sut.execute({
+      name: 'John Doe',
+      email: 'johndoe@example.com',
+      password: '123456',
+    })
+
+    expect(user.id).toEqual(expect.any(String))
   })
 })
