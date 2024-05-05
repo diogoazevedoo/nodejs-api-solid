@@ -5,8 +5,8 @@ GymPass style app.
 ## Functional Requirements
 
 - [x] User registration must be possible;
-- [ ] User authentication must be possible;
-- [ ] It must be possible to obtain the profile of a logged-in user;
+- [x] User authentication must be possible;
+- [x] It must be possible to obtain the profile of a logged-in user;
 - [ ] It must be possible to obtain the number of check-ins performed by the logged-in user;
 - [ ] Users should be able to access their check-in history;
 - [ ] Users should be able to search for nearby gyms (up to 10km);
