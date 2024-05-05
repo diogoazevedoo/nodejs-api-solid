@@ -1,55 +1,22 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { RegisterService } from './register'
-import { compare } from 'bcryptjs'
-import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
-import { UserAlreadyExistsError } from './errors/user-already-exists-error'
+import { InMemoryCheckInsRepository } from '@/repositories/in-memory/in-memory-check-ins-repository'
+import { CheckInService } from './check-in'
 
-let usersRepository: InMemoryUsersRepository
-let sut: RegisterService
+let checkInsRepository: InMemoryCheckInsRepository
+let sut: CheckInService
 
-describe('Register Service', () => {
+describe('Check In Service', () => {
   beforeEach(() => {
-    usersRepository = new InMemoryUsersRepository()
-    sut = new RegisterService(usersRepository)
+    checkInsRepository = new InMemoryCheckInsRepository()
+    sut = new CheckInService(checkInsRepository)
   })
 
-  it('should hash user password upon registration', async () => {
-    const { user } = await sut.execute({
-      name: 'John Doe',
-      email: 'johndoe@example.com',
-      password: '123456',
+  it('should be able to check in', async () => {
+    const { checkIn } = await sut.execute({
+      gymId: 'gym-01',
+      userId: 'user-01',
     })
 
-    const isPasswordCorrectlyHashed = await compare('123456', user.passwordHash)
-
-    expect(isPasswordCorrectlyHashed).toBe(true)
-  })
-
-  it('should not be able to register with same email twice', async () => {
-    const email = 'johndoe@example.com'
-
-    await sut.execute({
-      name: 'John Doe',
-      email,
-      password: '123456',
-    })
-
-    await expect(() =>
-      sut.execute({
-        name: 'John Doe',
-        email,
-        password: '123456',
-      }),
-    ).rejects.toBeInstanceOf(UserAlreadyExistsError)
-  })
-
-  it('should be able to register', async () => {
-    const { user } = await sut.execute({
-      name: 'John Doe',
-      email: 'johndoe@example.com',
-      password: '123456',
-    })
-
-    expect(user.id).toEqual(expect.any(String))
+    expect(checkIn.id).toEqual(expect.any(String))
   })
 })
