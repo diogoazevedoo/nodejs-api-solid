@@ -8,7 +8,7 @@ GymPass style app.
 - [x] User authentication must be possible;
 - [x] It must be possible to obtain the profile of a logged-in user;
 - [ ] It must be possible to obtain the number of check-ins performed by the logged-in user;
-- [ ] Users should be able to access their check-in history;
+- [x] Users should be able to access their check-in history;
 - [ ] Users should be able to search for nearby gyms (up to 10km);
 - [ ] Users should be able to search for gyms by name;
 - [x] Users should be able to check into a gym;
@@ -28,5 +28,5 @@ GymPass style app.
 
 - [x] User passwords need to be encrypted;
 - [x] Application data must be persisted in a PostgreSQL database;
-- [ ] All data lists must be paginated with 20 items per page;
+- [x] All data lists must be paginated with 20 items per page;
 - [ ] The user must be identified by a JWT (JSON Web Token);
