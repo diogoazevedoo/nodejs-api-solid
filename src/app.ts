@@ -3,6 +3,8 @@ import { register } from './http/controllers/register'
 import { ZodError } from 'zod'
 import { env } from './env'
 import { authenticate } from './http/controllers/authenticate'
+import fastifyJwt from '@fastify/jwt'
+import { profile } from './http/controllers/profile'
 
 export const app = fastify()
 
@@ -22,5 +24,10 @@ app.setErrorHandler((error, _, reply) => {
   return reply.status(500).send({ message: 'Internal server error.' })
 })
 
+app.register(fastifyJwt, {
+  secret: env.JWT_SECRET,
+})
+
 app.register(register)
 app.register(authenticate)
+app.register(profile)
