@@ -1,6 +1,6 @@
 import { makeGetUserProfileService } from '@/services/factories/make-get-user-profile-service'
 import type { FastifyInstance } from 'fastify'
-import { verifyJWT } from '../middlewares/verify-jwt'
+import { verifyJWT } from '../../middlewares/verify-jwt'
 
 export async function profile(app: FastifyInstance) {
   app.get('/me', { onRequest: [verifyJWT] }, async (request, reply) => {
