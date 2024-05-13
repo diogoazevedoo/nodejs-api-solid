@@ -4,8 +4,10 @@ export async function refresh(app: FastifyInstance) {
   app.patch('/token/refresh', async (request, reply) => {
     await request.jwtVerify({ onlyCookie: true })
 
+    const { role } = request.user
+
     const token = await reply.jwtSign(
-      {},
+      { role },
       {
         sign: {
           sub: request.user.sub,
@@ -14,7 +16,7 @@ export async function refresh(app: FastifyInstance) {
     )
 
     const refreshToken = await reply.jwtSign(
-      {},
+      { role },
       {
         sign: {
           sub: request.user.sub,
